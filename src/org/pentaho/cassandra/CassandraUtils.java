@@ -152,7 +152,7 @@ public class CassandraUtils {
    * @return an array of bytes containing the compressed query
    */
   public static byte[] compressCQLQuery( String queryStr, Compression compression ) {
-    byte[] data = queryStr.getBytes( Charset.forName( "UTF-8" ) ); //$NON-NLS-1$
+    byte[] data = queryStr.getBytes(Charset.forName("UTF-8")); //$NON-NLS-1$
 
     if ( compression != Compression.GZIP ) {
       return data;
@@ -280,6 +280,11 @@ public class CassandraUtils {
 
     for ( String keyN : keyColNames ) {
       int keyIndex = inputMeta.indexOfValue( keyN );
+
+      if (keyIndex < 0) {
+        continue;
+      }
+
       // check the key columns first
       ValueMetaInterface keyMeta = inputMeta.getValueMeta( keyIndex );
       if ( keyMeta.isNull( row[keyIndex] ) ) {
@@ -292,6 +297,11 @@ public class CassandraUtils {
     StringBuilder fullKey = new StringBuilder();
     for ( String keyN : keyColNames ) {
       int keyIndex = inputMeta.indexOfValue( keyN );
+
+      if (keyIndex < 0) {
+        continue;
+      }
+
       ValueMetaInterface keyMeta = inputMeta.getValueMeta( keyIndex );
 
       fullKey.append( keyMeta.getString( row[keyIndex] ) ).append( " " ); //$NON-NLS-1$
